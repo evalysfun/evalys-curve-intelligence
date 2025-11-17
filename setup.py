@@ -14,7 +14,6 @@ setup(
     name="evalys-curve-intelligence",
     version="0.1.0",
     author="Evalys Team",
-    author_email="team@evalys.io",
     description="Curve Intelligence Layer for Evalys - Real-time curve analysis and risk detection",
     long_description=long_description,
     long_description_content_type="text/markdown",
