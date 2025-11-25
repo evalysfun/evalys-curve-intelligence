@@ -132,12 +132,20 @@ curl -X POST "http://localhost:8003/api/v1/curve/optimal-window" \
 
 ```
 Curve Intelligence Layer
-├── Curve Analyzer      # Curve data analysis
-├── Risk Detector       # Risk assessment
+├── Curve Analyzer      # Curve data analysis (slope, depth, velocity, volatility)
+├── Risk Detector       # Risk assessment (sniper, clusters, liquidity)
 ├── Window Optimizer    # Execution window calculation
-├── Pattern Recognizer  # Pattern detection
-└── Data Collector      # Data collection
+├── Pattern Recognizer  # Pattern detection (whales, bots, pump/dump)
+└── Data Collector      # Data collection (RPC, on-chain parsing)
 ```
+
+**Analysis Pipeline**:
+1. Fetch recent transactions and curve state
+2. Calculate core metrics (slope, depth, velocity, volatility)
+3. Run detection algorithms (sniper, clusters, patterns)
+4. Calculate risk score using weighted formula
+5. Determine optimal execution window
+6. Return comprehensive analysis
 
 ## 🔧 Configuration
 
@@ -162,6 +170,26 @@ pytest
 pytest --cov=src --cov-report=html
 ```
 
+### Demo
+
+Run the interactive demo:
+
+```bash
+python examples/demo.py
+```
+
+This demonstrates:
+- Curve metrics calculation
+- Sniper detection
+- Buy cluster detection
+- Risk assessment
+- Pattern recognition
+- Optimal window calculation
+
+Perfect for screen recordings and promotional videos.
+
+**Expected Output**: See `examples/demo.py` for full demonstration of all features.
+
 ## 📦 Project Structure
 
 ```
@@ -177,7 +205,16 @@ evalys-curve-intelligence/
 │   ├── api/                 # REST API
 │   ├── config/              # Configuration
 │   └── utils/               # Utilities
+├── docs/
+│   ├── curve-spec.md        # Curve analysis specification
+│   ├── detection.md          # Detection algorithms
+│   ├── risk-model.md         # Risk calculation formula
+│   └── evaluation.md         # Evaluation results
+├── examples/
+│   └── demo.py              # Runnable demo script
 ├── tests/                   # Tests
+├── CHANGELOG.md
+├── ROADMAP.md
 ├── requirements.txt
 ├── setup.py
 └── README.md
@@ -185,15 +222,30 @@ evalys-curve-intelligence/
 
 ## 📝 Implementation Status
 
-- ✅ Framework structure
-- ✅ Curve analysis logic
-- ✅ Risk detection algorithms
-- ✅ Window optimization
-- ✅ Pattern recognition
-- ⚠️ On-chain data fetching (needs implementation)
-- ⚠️ Real transaction history (needs implementation)
+### Implemented (v0.1)
 
-**Note**: The intelligence layer provides the framework and algorithms. Actual on-chain data fetching needs to be implemented based on launchpad program structures.
+- ✅ **Curve Analysis**: Slope, liquidity depth, trade velocity, volatility calculations
+- ✅ **Sniper Detection**: Algorithm v0.1 with frequency, interval, and pattern analysis
+- ✅ **Buy Cluster Detection**: Time-based clustering with wallet correlation
+- ✅ **Risk Assessment**: Weighted risk formula with configurable thresholds
+- ✅ **Pattern Recognition**: Basic whale, bot, pump/dump pattern detection
+- ✅ **Window Optimization**: Optimal execution window calculation
+- ✅ **REST API**: Full FastAPI with all endpoints
+- ✅ **Python Library**: Standalone library interface
+- ✅ **Documentation**: Comprehensive specs, algorithms, and evaluation results
+- ✅ **Tests**: Basic test suite
+
+### Planned
+
+- ⏳ **Full On-Chain Data Fetching**: Complete implementation of RPC data collection
+- ⏳ **Machine Learning Models**: Trained models for pattern recognition
+- ⏳ **Real-Time WebSocket Updates**: Live data streaming
+- ⏳ **Indexer Integration**: Helius, QuickNode integration
+- ⏳ **Advanced Pattern Recognition**: Multi-wallet correlation, cross-token analysis
+- ⏳ **Adaptive Thresholds**: Market-condition-based threshold adjustment
+- ⏳ **Historical Backtesting**: Backtesting framework for validation
+
+**Note**: The intelligence layer provides the framework and algorithms. On-chain data fetching is partially implemented and needs completion based on launchpad program structures.
 
 ## 🤝 Contributing
 
@@ -216,12 +268,56 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [evalys-launchpad-adapters](https://github.com/evalysfun/evalys-launchpad-adapters) - Launchpad integrations
 - [evalys-execution-engine](https://github.com/evalysfun/evalys-execution-engine) - Transaction execution
 
+## 📚 Documentation
+
+- **[Curve Spec](docs/curve-spec.md)**: Data sources, metrics, output schema
+- **[Detection Algorithms](docs/detection.md)**: Sniper and cluster detection algorithms
+- **[Risk Model](docs/risk-model.md)**: Risk calculation formula and thresholds
+- **[Evaluation](docs/evaluation.md)**: Test results and accuracy metrics
+- **[Changelog](CHANGELOG.md)**: Version history
+- **[Roadmap](ROADMAP.md)**: Planned features and improvements
+
+## 📊 Measurable Behavior
+
+Instead of vague claims, here's what the system actually does:
+
+**Sniper Detection**:
+- Analyzes transaction frequency, intervals, and wallet patterns
+- Calculates sniper score: `[0, 1]` based on frequency, interval, first-seen ratio, price impact
+- Threshold: `sniper_score >= 0.6` AND `transaction_count >= 5` = active
+
+**Buy Cluster Detection**:
+- Groups transactions by time windows (60s clusters)
+- Analyzes wallet correlation and size similarity
+- Returns clusters with correlation scores: `[0, 1]`
+
+**Risk Assessment**:
+- Formula: `0.35 * sniper_score + 0.25 * volatility + 0.20 * velocity + 0.20 * liquidity_risk`
+- Thresholds: Low < 0.35, Medium 0.35-0.7, High 0.7-0.9, Critical >= 0.9
+- Maps to privacy mode recommendations
+
+**Curve Metrics**:
+- Slope: Rate of price change per supply unit (normalized [0, 1])
+- Liquidity Depth: Available liquidity at current price (normalized [0, 1])
+- Trade Velocity: Transactions per second (normalized [0, 1])
+- Volatility: Price volatility over rolling window (normalized [0, 1])
+
+See [Curve Spec](docs/curve-spec.md) and [Detection Algorithms](docs/detection.md) for detailed specifications.
+
 ## 📞 Support
 
 - **Issues**: [GitHub Issues](https://github.com/evalysfun/evalys-curve-intelligence/issues)
-- **Discord**: [Coming Soon]
+- **Documentation**: See `docs/` directory
+- **Related Projects**: See below
+
+## 🔗 Related Projects
+
+- [evalys-privacy-engine](https://github.com/evalysfun/evalys-privacy-engine) - Privacy mode orchestration
+- [evalys-burner-swarm](https://github.com/evalysfun/evalys-burner-swarm) - Burner wallet management
+- [evalys-launchpad-adapters](https://github.com/evalysfun/evalys-launchpad-adapters) - Launchpad integrations
+- [evalys-execution-engine](https://github.com/evalysfun/evalys-execution-engine) - Transaction execution
 
 ---
 
-**Evalys Curve Intelligence** - Real-time analysis for memecoin launchpads 📊
+**Evalys Curve Intelligence** - Real-time analysis with measurable algorithms 📊
 
